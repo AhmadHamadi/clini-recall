@@ -32,5 +32,26 @@ Development standards:
 
 \- Add tests for tenancy, STOP handling, and idempotency.
 
+Database:
+
+\- Engine: PostgreSQL
+
+\- Production hosting: Azure Database for PostgreSQL (Flexible Server)
+
+\- Region: Canada Central (Ontario / Toronto)
+
+\- Phase 0: No database
+
+\- Phase 1+: PostgreSQL introduced via Drizzle ORM
+
+Tenant table rules (Phase 1+):
+
+\- Every domain table (patients, appointments, etc.) MUST include clinic\_id column
+
+\- Sync tables MUST have index on (clinic\_id, external\_id)
+
+\- All queries MUST include clinic\_id in WHERE clause
+
+\- No endpoint may accept clinic\_id from client input (enforced by schema)
 
 
