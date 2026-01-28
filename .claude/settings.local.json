@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run typecheck:*)",
+      "Bash(npm run format:check:*)",
+      "Bash(npm test)",
+      "Bash(timeout 3 npm run dev:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nchore: phase 0 minimal API skeleton with health check\n\n- Fastify server with typed config loader \\(fail-fast on missing env vars\\)\n- GET /health endpoint returning { status: \"ok\" }\n- ESLint + Prettier + Vitest tooling\n- GitHub Actions CI pipeline\n- Updated CLAUDE.md with database specs and tenant table rules\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+    ]
+  }
+}
