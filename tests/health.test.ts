@@ -6,10 +6,15 @@ describe("GET /health", () => {
   let app: FastifyInstance;
 
   beforeAll(async () => {
+    // Build server without pool (health check only)
     app = buildServer({
       port: 3000,
       host: "0.0.0.0",
       nodeEnv: "test",
+      jwt: {
+        secret: "test-secret",
+        expiresInSeconds: 3600,
+      },
     });
     await app.ready();
   });

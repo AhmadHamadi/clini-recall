@@ -6,13 +6,15 @@ describe("config", () => {
 
   beforeEach(() => {
     process.env = { ...originalEnv };
+    // JWT_SECRET is required
+    process.env.JWT_SECRET = "test-secret-key-for-testing-only";
   });
 
   afterEach(() => {
     process.env = originalEnv;
   });
 
-  it("loads default values when env vars are not set", () => {
+  it("loads default values when optional env vars are not set", () => {
     delete process.env.PORT;
     delete process.env.HOST;
     delete process.env.NODE_ENV;
@@ -48,5 +50,45 @@ describe("config", () => {
     const config = loadConfig();
 
     expect(config.nodeEnv).toBe("test");
+  });
+
+  it("throws when JWT_SECRET is missing", () => {
+    delete process.env.JWT_SECRET;
+
+    expect(() => loadConfig()).toThrow(
+      "Missing required environment variable: JWT_SECRET"
+    );
+  });
+
+  it("parses JWT_EXPIRES_IN with time units", () => {
+    process.env.JWT_EXPIRES_IN = "2h";
+
+    const config = loadConfig();
+
+    expect(config.jwt.expiresInSeconds).toBe(7200);
+  });
+
+  it("parses JWT_EXPIRES_IN in days", () => {
+    process.env.JWT_EXPIRES_IN = "7d";
+
+    const config = loadConfig();
+
+    expect(config.jwt.expiresInSeconds).toBe(604800);
+  });
+
+  it("throws when JWT_EXPIRES_IN exceeds 7 day maximum", () => {
+    process.env.JWT_EXPIRES_IN = "8d";
+
+    expect(() => loadConfig()).toThrow(
+      "JWT_EXPIRES_IN exceeds maximum of 7 days"
+    );
+  });
+
+  it("throws when JWT_EXPIRES_IN in seconds exceeds maximum", () => {
+    process.env.JWT_EXPIRES_IN = "700000"; // > 604800 seconds
+
+    expect(() => loadConfig()).toThrow(
+      "JWT_EXPIRES_IN exceeds maximum of 7 days"
+    );
   });
 });
